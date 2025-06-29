@@ -8,13 +8,13 @@ console.log(languages)
 export default function Hangman() {
 
   const [currentWord, setCurrentWord] = React.useState("React")
-  const wordChar = Array.from(currentWord.toUpperCase())
+  const alphabet = "abcdefghijklmnopqrstuvwxyz"
 
-  const wordCharrecters = wordChar.map(char =>
-    <span key={char}>{char}</span>
+  const wordChar = currentWord.split("").map((char, index) =>
+    <span key={index}>{char.toUpperCase()}</span>
   )
 
-  console.log(wordCharrecters)
+  console.log(wordChar)
 
   const languageElements = languages.map(lang => {
 
@@ -26,6 +26,11 @@ export default function Hangman() {
       <span className="chip" key={lang.name} style={styles}>{lang.name}</span>
     )
   })
+
+  const keyboardElements = alphabet.split("").map(letter => (
+    <button key={letter}>{letter.toUpperCase()}</button>
+  ))
+  console.log(keyboardElements)
     return (
         <main>
             <Header />
@@ -34,7 +39,10 @@ export default function Hangman() {
                 {languageElements}
             </div>
             <div className="word">
-                {wordCharrecters}
+                {wordChar}
+            </div>
+            <div className="keyboard">
+              {keyboardElements}
             </div>
         </main> 
     )
