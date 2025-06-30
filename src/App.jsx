@@ -1,20 +1,29 @@
 import React from "react"
+import clsx from "clsx"
 import Header from "./Header"
 import Status from './Status'
 import { languages } from "./languages"
 
 
-console.log(languages)
+// console.log(languages)
 export default function Hangman() {
 
-  const [currentWord, setCurrentWord] = React.useState("React")
-  const alphabet = "abcdefghijklmnopqrstuvwxyz"
+  //states value
+  const [currentWord, setCurrentWord] = React.useState("react")
+  const [guessed, setGuessed] = React.useState([])
 
-  const wordChar = currentWord.split("").map((char, index) =>
-    <span key={index}>{char.toUpperCase()}</span>
+  //dervied value
+  const wrongGuessArrayCount = guessed.filter(letter => !currentWord.includes(letter)).length
+  console.log(wrongGuessArrayCount)
+  // static value
+  const alphabet = "abcdefghijklmnopqrstuvwxyz"
+  // console.log(guessed)
+
+  const wordChar = currentWord.split("").map((letter, index) =>
+    <span key={index}>{guessed.includes(letter) ? letter.toUpperCase() : ""}</span>
   )
 
-  console.log(wordChar)
+  // console.log(wordChar)
 
   const languageElements = languages.map(lang => {
 
@@ -27,10 +36,41 @@ export default function Hangman() {
     )
   })
 
-  const keyboardElements = alphabet.split("").map(letter => (
-    <button key={letter}>{letter.toUpperCase()}</button>
-  ))
-  console.log(keyboardElements)
+  function addGuessedLetter(letter){
+    setGuessed(prevLetter => {
+      const letterSet = new Set(prevLetter)
+      letterSet.add(letter)
+      return Array.from(letterSet)
+    }
+      
+    )
+  }
+
+  const keyboardElements = alphabet.split("").map(letter => {
+
+        const isGuessed = guessed.includes(letter)
+        const isCorrect = isGuessed && currentWord.includes(letter)
+        const isWrong = isGuessed && !currentWord.includes(letter)
+
+        const className= clsx({
+          correct: isCorrect,
+          wrong: isWrong
+        })
+
+        // console.log(className)
+        
+        return (
+            <button
+                className={className}
+                key={letter}
+                onClick={() => addGuessedLetter(letter)}
+            >
+                {letter.toUpperCase()}
+            </button>
+        )
+    })
+
+
     return (
         <main>
             <Header />
