@@ -11,12 +11,17 @@ export default function Hangman() {
   //states value
   const [currentWord, setCurrentWord] = React.useState("react")
   const [guessed, setGuessed] = React.useState([])
+  
 
   //dervied value
   const wrongGuessArrayCount = guessed.filter(letter => !currentWord.includes(letter)).length
   console.log(wrongGuessArrayCount)
   // static value
   const alphabet = "abcdefghijklmnopqrstuvwxyz"
+  // const isgameOver = true
+  const isGameWon = currentWord.split("").every(letter => guessed.includes(letter))
+  const isGameLost = wrongGuessArrayCount >= languages.length -1
+
   // console.log(guessed)
 
   const wordChar = currentWord.split("").map((letter, index) =>
@@ -25,14 +30,22 @@ export default function Hangman() {
 
   // console.log(wordChar)
 
-  const languageElements = languages.map(lang => {
+  const languageElements = languages.map((lang, index)=> {
 
+    const isLanguageLost = index < wrongGuessArrayCount
     const styles = {
       backgroundColor: lang.backgroundColor,
       color: lang.color
     }
+    const className = clsx("chip", isLanguageLost && "lost")
     return (
-      <span className="chip" key={lang.name} style={styles}>{lang.name}</span>
+      <span
+        className={className}
+        key={lang.name}
+        style={styles}
+        >
+          {lang.name}
+      </span>
     )
   })
 
@@ -84,6 +97,9 @@ export default function Hangman() {
             <div className="keyboard">
               {keyboardElements}
             </div>
+            {(isGameWon || isGameLost) && <button className="new-game">
+                New Game
+            </button>}
         </main> 
     )
 }
